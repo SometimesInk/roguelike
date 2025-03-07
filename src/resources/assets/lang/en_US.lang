@@ -1,0 +1,27 @@
+; ; Utils
+utils.key=(Press any key to continue)
+
+; ; Translatable
+translatable.debug={0}
+translatable.error.missing=The translation for the key '{0}' is missing.
+translatable.error.definedEmpty=The empty translation key is defined, although it should not be.
+translatable.error.abnormalDebug=The debug translation key is not defined to its standard value of '{0}'.
+
+; ; Command Parsing
+command.parsing.invalid=Input '{0}' is not a recognized command.
+command.parsing.invite= >{0}
+
+; Locale Manage Command
+command.manage.locale.name=lang
+command.manage.locale.usage=Locale file to use as first and only argument.
+command.manage.locale.output=Successfully switched language locale from '{0}' to '{1}'.
+command.manage.locale.error.noArgs=This command should have 1 argument.
+command.manage.locale.error.toManyArgs=This command should only have 1 argument.
+command.manage.locale.error.notLangArg=This command's only argument should end in '.lang'.
+command.manage.locale.error.notExist=The language locale '{0}' was not found in assets.
+command.manage.locale.error.noChange=The language locale '{0}' is already selected.
+
+; Quit Manage Command
+command.manage.quit.name=quit
+command.manage.quit.usage=no arguments.
+command.manage.quit.output=Goodbye!

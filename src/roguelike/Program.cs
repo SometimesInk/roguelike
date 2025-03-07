@@ -1,14 +1,12 @@
-﻿using System;
+﻿using roguelike.roguelike.engine;
 
-using Roguelike.Engine;
+namespace roguelike.roguelike;
 
-namespace Roguelike
+// ReSharper disable once ClassNeverInstantiated.Global
+internal class Program
 {
-  internal class Program
+  public static void Main(string[] args)
   {
-    public static void Main(String[] args)
-    {
-      new Game().Run();
-    }
+    new Game().Run();
   }
 }

@@ -1,15 +1,27 @@
-using System;
+namespace roguelike.roguelike.engine;
 
-namespace Roguelike.Engine {
-  class Window {
-    private bool shouldClose = false;
+public class Window
+{
+  private bool shouldClose;
+  private bool shouldRedraw;
 
-    public void setWindowShouldClose(bool value) {
-      shouldClose = value;
-    }
+  public void SetWindowShouldClose(bool value)
+  {
+    shouldClose = value;
+  }
 
-    public bool windowShouldClose() {
-      return shouldClose;
-    }
+  public void SetWindowShouldRedraw(bool value)
+  {
+    shouldRedraw = value;
+  }
+
+  public bool WindowShouldClose()
+  {
+    return shouldClose;
+  }
+
+  public bool WindowShouldRedraw()
+  {
+    return shouldRedraw;
   }
 }

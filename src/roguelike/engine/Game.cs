@@ -45,7 +45,7 @@ namespace roguelike.roguelike.engine
       if (!Window.ShouldRedraw) return;
 
       // Ask for a keypress before continuation
-      Translatable.Print("utils.key");
+      Translatable.Printf("utils.key", form: '\t');
       Console.ReadKey();
     }
 

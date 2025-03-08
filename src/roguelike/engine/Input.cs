@@ -7,7 +7,7 @@ internal static class Input
 {
   public static void Ask()
   {
-    Translatable.Printf(new Translatable("command.parsing.invite"), endWithNewLine: false, formatElements: " ");
+    Translatable.Printf("command.parsing.invite", false, form: " ");
     string? line = Console.ReadLine();
 
     // Check if line is valid
@@ -23,11 +23,11 @@ internal static class Input
     // Send invalid translatable if the command wasn't recognized and parsed.
     var output = HandlerCommand.ParseCommand(args);
     if (output.Item1 == Translatable.Empty)
-      Translatable.Printf(new Translatable("command.parsing.invalid"), formatElements: args[0]);
+      Translatable.Printf("command.parsing.invalid", args[0]);
     else
     {
       if (output.Item2 == null) Translatable.Print(output.Item1);
-      else Translatable.Printf(output.Item1, formatElements: output.Item2);
+      else Translatable.Printf(output.Item1, output.Item2);
     }
   }
 }

@@ -1,3 +1,5 @@
+using roguelike.roguelike.config;
+using roguelike.roguelike.engine.handle;
 using roguelike.roguelike.util.resources;
 using roguelike.roguelike.util.resources.translatable;
 
@@ -21,13 +23,14 @@ public class CommandManageLocale : Command
   public override (Translatable, object[]?) Execute(string[] args)
   {
     // Check for arguments
-    if (args.Length == 1) return (GetTranslatable("error.noArgs"), null);
+    if (args.Length == 1)
+      return (GetTranslatable("output.noArgs"), [HandlerConfig.GetConfig<ConfigMain>().ActiveLocale]);
     if (args.Length > 2) return (GetTranslatable("error.toManyArgs"), null);
     string file = args[1];
     if (!file.EndsWith(".lang")) return (GetTranslatable("error.notLangArg"), null);
 
     // Check if file exists
-    if (!File.Exists(Resources.GetResourcePath(Path.Combine("lang", file))))
+    if (!File.Exists(Resources.GetResourcePath("lang", file)))
       return (GetTranslatable("error.NotExist"), [file]);
 
     // Check if there is a change to be made
@@ -35,9 +38,8 @@ public class CommandManageLocale : Command
       return (GetTranslatable("error.noChange"), [file]);
 
     // Change locale
-    string oldLocale = Translatable.GetActiveLocale();
-    // Translatable.ActiveLocale = file; // Assign locale
+    HandlerConfig.GetConfig<ConfigMain>().SetActiveLocale(file).Write<ConfigMain>();
 
-    return (GetTranslatable("output"), [oldLocale, file]);
+    return (GetTranslatable("output"), [Translatable.GetActiveLocale(), file]);
   }
 }

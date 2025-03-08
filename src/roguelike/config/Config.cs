@@ -9,19 +9,26 @@ public abstract class Config
 
   public static T Read<T>(string name)
   {
-    return JsonConvert.DeserializeObject<T>(Resources.ReadPath(Resources.GetResourcePath(Path.Combine("conf",
-      name)))) ?? throw new InvalidOperationException();
+    // TODO: check for contents' definition and safe mode for this
+    string contents = Resources.ReadPath("conf", name);
+    return JsonConvert.DeserializeObject<T>(contents) ?? throw new InvalidOperationException();
   }
 
-  // TODO: Fix writing
-  public static void Write(Config conf)
+  public void Write<T>()
   {
-    File.WriteAllText(conf.ToString(), JsonConvert.SerializeObject(conf));
+    // TODO: Safe mode for this, and perhaps a way to easily convert from type
+    //  T1 to T2 as this piece of code is often repeated.
+    T conf = (T)Convert.ChangeType(this, typeof(T));
+
+    string contents = JsonConvert.SerializeObject(conf, typeof(T), Formatting.Indented, new JsonSerializerSettings());
+
+    // TODO: Safe mode here to check cast
+    File.WriteAllText(conf.ToString(), contents);
   }
 
   public override string ToString()
   {
     // Return path
-    return Resources.GetResourcePath(Path.Combine("conf", GetName()));
+    return Resources.GetResourcePath("conf", GetName());
   }
 }

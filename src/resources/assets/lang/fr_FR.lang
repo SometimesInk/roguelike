@@ -1,5 +1,5 @@
 ; ; Utils
-utils.key={0}(Press any key to continue)
+utils.key=(Appuyez sur n'importe quelle touche pour continuer)
 
 ; ; Translatable
 translatable.debug={0}

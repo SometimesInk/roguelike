@@ -16,8 +16,13 @@
 //  - Prints the number of translatables found for manual checking;
 //  - Checks if the Translatable.Empty key is defined or not (it should not be);
 //  - Checks if the Translatable.Debug key exists and is '{0}' (as it should).
+//  - Checks if the selected locale has any missing keys
 
 #define CHECKS
+
+// TODO: Perhaps move some of this class' content to another (maybe with the
+//  name 'TranslatableUtil'), since this is getting quite cluttered and now
+//  looks like some standard library stuff...
 
 using roguelike.roguelike.config;
 using roguelike.roguelike.engine.handle;
@@ -27,7 +32,7 @@ namespace roguelike.roguelike.util.resources.translatable;
 public class Translatable(string key)
 {
   private static string activeLocale = string.Empty;
-  private static readonly List<string> CachedLocale = [];
+  private static Dictionary<string, string> cachedLocale = [];
 
   public static readonly Translatable Empty = new("translatable.empty");
   public static readonly Translatable Debug = new("translatable.debug");
@@ -40,12 +45,20 @@ public class Translatable(string key)
     activeLocale = HandlerConfig.GetConfig<ConfigMain>().ActiveLocale;
 
     // Cache
-    GenerateCache();
+    cachedLocale = GenerateCache(activeLocale);
 
 #if CHECKS
-    // Check if cache was correctly generated
-    Printf(new Translatable("translatable.init.checks"), stream: TranslatablePrintStream.Info,
-      formatElements: CachedLocale.Count);
+    // Check if cache was correctly generated based on the main locale en_US
+    if (activeLocale != "en_US.lang")
+    {
+      foreach (var key in GenerateCache("en_US.lang").Keys
+                 .Where(key => !cachedLocale.ContainsKey(key)))
+      {
+        Printf("translatable.error.missing", key);
+      }
+    }
+
+    Printf("translatable.init.checks", stream: TranslatablePrintStream.Info, form: cachedLocale.Count);
 
     // Check if Translatable.Empty is correctly undefined and if
     //  Translatable.Debug is correctly defined as '{0}'.
@@ -64,34 +77,38 @@ public class Translatable(string key)
 #endif
   }
 
-  private static void GenerateCache()
+  private static Dictionary<string, string> GenerateCache(string name)
   {
+    Dictionary<string, string> output = [];
+
     // Add all non-null-or-whitespace lines to the cache
-    foreach (string line in File.ReadLines(Resources.GetResourcePath(Path.Combine("lang", activeLocale))))
+    foreach (string line in File.ReadLines(Resources.GetResourcePath("lang", name)))
     {
       string trimmedLine = line.Trim();
-      if (!string.IsNullOrWhiteSpace(trimmedLine) && !trimmedLine.StartsWith(';')) CachedLocale.Add(trimmedLine);
+      if (string.IsNullOrWhiteSpace(trimmedLine) || trimmedLine.StartsWith(';')) continue;
+
+      // Add line to dictionary
+      string[] kvp = line.Split(['='], 2);
+      output.Add(kvp[0].Trim().ToLower(), kvp[1].Trim());
     }
+
+    return output;
   }
 
   private static string GetLangValue(Translatable translatable)
   {
-    foreach (string line in CachedLocale)
+    try
     {
-      // Split into two to avoid index errors
-      string[] kvp = line.Split(['='], 2);
-
-      // Check if kvp has correctly 2 elements, and if the keys match, return
-      //  a non-null value (otherwise null).
-      if (kvp.Length == 2 && kvp[0].Trim().Equals(translatable.Key, StringComparison.OrdinalIgnoreCase))
-        return kvp[1].Trim();
+      return cachedLocale[translatable.Key];
     }
-
+    catch (Exception)
+    {
 #if SAFE_MODE
       return translatable.Key;
 #else
-    throw new KeyNotFoundException($"Could not find a translation key for '{translatable.Key}'.");
+      throw new KeyNotFoundException($"Could not find a translation key for '{translatable.Key}'.");
 #endif
+    }
   }
 
   public static void Print(Translatable translatable, bool endWithNewLine = true, TranslatablePrintStream stream =
@@ -113,9 +130,25 @@ public class Translatable(string key)
   }
 
   public static void Printf(Translatable translatable, bool endWithNewLine = true, TranslatablePrintStream stream =
-    TranslatablePrintStream.Out, params object[] formatElements)
+    TranslatablePrintStream.Out, params object[] form)
   {
-    Print(translatable.Format(formatElements), endWithNewLine, stream, true);
+    Print(translatable.Format(form), endWithNewLine, stream, true);
+  }
+
+  public static void Printf(string key, bool endWithNewLine = true, TranslatablePrintStream stream =
+    TranslatablePrintStream.Out, params object[] form)
+  {
+    Printf(new Translatable(key), endWithNewLine, stream, form);
+  }
+
+  public static void Printf(Translatable translatable, params object[] formattingElements)
+  {
+    Printf(translatable, form: formattingElements);
+  }
+
+  public static void Printf(string key, params object[] form)
+  {
+    Printf(new Translatable(key), form);
   }
 
   public static void Log(string message)

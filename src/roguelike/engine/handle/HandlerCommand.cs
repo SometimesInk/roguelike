@@ -7,18 +7,18 @@ using roguelike.roguelike.engine.command;
 using roguelike.roguelike.engine.command.manage;
 using roguelike.roguelike.util.resources.translatable;
 
-namespace roguelike.roguelike.engine.handle
-  // ReSharper disable once ArrangeNamespaceBody
-{
-  public static class HandlerCommand
-  {
-    private static readonly List<Command> RegisteredCommands = [];
+namespace roguelike.roguelike.engine.handle;
 
-    public static void Init()
-    {
-      // Register commands
-      RegisteredCommands.Add(new CommandManageQuit());
-      RegisteredCommands.Add(new CommandManageLocale());
+public static class HandlerCommand
+{
+  private static readonly List<Command> RegisteredCommands = [];
+
+  public static void Init()
+  {
+    // Register commands
+    RegisteredCommands.Add(new CommandManageListLocales());
+    RegisteredCommands.Add(new CommandManageLocale());
+    RegisteredCommands.Add(new CommandManageQuit());
 
 #if CHECKS
       foreach (Command command in registeredCommands)
@@ -34,29 +34,28 @@ namespace roguelike.roguelike.engine.handle
             stream: TranslatablePrintStream.Err);
       }
 #endif
-    }
+  }
 
-    public static (Translatable, object[]?) ParseCommand(string[] args)
-    {
-      // Find registered command
-      Command? command = FindCommand(args[0]);
-      if (command is null) return (Translatable.Empty, null);
+  public static (Translatable, object[]?) ParseCommand(string[] args)
+  {
+    // Find registered command
+    Command? command = FindCommand(args[0]);
+    if (command is null) return (Translatable.Empty, null);
 
-      // Execute command
-      var output = command.Execute(args);
+    // Execute command
+    var output = command.Execute(args);
 
-      return output;
-    }
+    return output;
+  }
 
-    /// <summary>
-    /// Find a registered command with a specified name
-    /// </summary>
-    /// <param name="name">The name of the command to look for including its
-    /// type</param>
-    /// <returns>The command of null if it was not found</returns>
-    private static Command? FindCommand(string name)
-    {
-      return RegisteredCommands.FirstOrDefault(registeredCommand => registeredCommand.ToString() == name);
-    }
+  /// <summary>
+  /// Find a registered command with a specified name
+  /// </summary>
+  /// <param name="name">The name of the command to look for including its
+  /// type</param>
+  /// <returns>The command of null if it was not found</returns>
+  private static Command? FindCommand(string name)
+  {
+    return RegisteredCommands.FirstOrDefault(registeredCommand => registeredCommand.ToString() == name);
   }
 }

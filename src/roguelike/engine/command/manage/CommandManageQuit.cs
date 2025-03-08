@@ -1,3 +1,5 @@
+using roguelike.roguelike.util.resources.translatable;
+
 namespace roguelike.roguelike.engine.command.manage;
 
 public class CommandManageQuit : Command
@@ -12,8 +14,10 @@ public class CommandManageQuit : Command
     return "quit";
   }
 
-  public override CommandResult Execute(string[] args)
+  public override (Translatable, object[]?) Execute(string[] args)
   {
-    return new CommandResult(GetTranslatable("output"), true);
+    // Close window
+    Window.ShouldClose = true;
+    return (GetTranslatable("output"), null);
   }
 }

@@ -23,10 +23,10 @@ public abstract class Command
   /// Executes the command for the given arguments.
   /// </summary>
   /// <param name="args">Arguments to parse the command for, where the 0th index
-  /// is the command alias used.</param>
+  ///   is the command alias used.</param>
   /// <returns>A CommandResult object indicating how to process the command
   /// after execution.</returns>
-  public abstract CommandResult Execute(string[] args);
+  public abstract (Translatable, object[]?) Execute(string[] args);
 
   public override string ToString()
   {

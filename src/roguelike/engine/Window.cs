@@ -1,27 +1,14 @@
 namespace roguelike.roguelike.engine;
 
-public class Window
+public static class Window
 {
-  private bool shouldClose;
-  private bool shouldRedraw;
+  public static bool ShouldClose { get; set; }
 
-  public void SetWindowShouldClose(bool value)
-  {
-    shouldClose = value;
-  }
+  public static bool ShouldRedraw { get; set; }
 
-  public void SetWindowShouldRedraw(bool value)
+  public static void Init()
   {
-    shouldRedraw = value;
-  }
-
-  public bool WindowShouldClose()
-  {
-    return shouldClose;
-  }
-
-  public bool WindowShouldRedraw()
-  {
-    return shouldRedraw;
+    ShouldClose = false;
+    ShouldRedraw = false;
   }
 }

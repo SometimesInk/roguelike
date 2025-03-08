@@ -1,76 +1,55 @@
-// In this class, CHECKS does the following:
-//  - Checks if the Translatable.Empty key is defined or not (it should not be);
-//  - Checks if the Translatable.Debug key exists and is '{0}' (as it should).
-
-#define CHECKS
-
-using roguelike.roguelike.engine.command;
+using roguelike.roguelike.engine.handle;
 using roguelike.roguelike.util.resources.translatable;
 
 namespace roguelike.roguelike.engine
-  // ReSharper disable once ArrangeNamespaceBody
 {
-  internal class Game
+  internal static class Game
   {
-    private readonly CommandParser parser;
-    private readonly Window win;
-
-    public Game()
+    public static void Run()
     {
-      // Configure locale
-      Translatable.ActiveLocale = "en_US.lang";
+      PreInit();
+      Init();
 
-#if CHECKS
-      // Check if Translatable.Empty is correctly undefined and if
-      //  Translatable.Debug is correctly defined as '{0}'.
-      try
-      {
-        if (Translatable.Empty.ToString() != Translatable.Empty.Key)
-          Translatable.Print("translatable.error.definedEmpty", stream: TranslatablePrintStream.Err);
-      }
-      catch (KeyNotFoundException)
-      {
-        // Good.
-      }
-
-      if (Translatable.Debug.ToString() != "{0}")
-        Translatable.Print("translatable.error.abnormalDebug");
-#endif
-
-      // Init
-      parser = new CommandParser();
-      win = new Window();
+      // Run game loop
+      while (!Window.ShouldClose) Loop();
     }
 
-    public void Run()
+    /// <summary>
+    /// Initialization for absolutely essential components
+    /// </summary>
+    private static void PreInit()
     {
-      win.SetWindowShouldRedraw(true);
-      while (!win.WindowShouldClose())
-      {
-        Loop();
-      }
+      HandlerConfig.Init();
+      Translatable.Init();
     }
 
-    private void Loop()
+    private static void Init()
+    {
+      HandlerCommand.Init();
+      Window.Init();
+    }
+
+
+    private static void Loop()
     {
       // Draw window if it is required
-      if (win.WindowShouldRedraw())
+      if (Window.ShouldRedraw)
         Draw();
       else
-        win.SetWindowShouldRedraw(true);
+        Window.ShouldRedraw = true;
 
       // Ask for command input
-      Input.Ask(parser, win);
+      Input.Ask();
 
       // If the window should be redrawn, ask for a keypress before doing so.
-      if (!win.WindowShouldRedraw()) return;
+      if (!Window.ShouldRedraw) return;
 
       // Ask for a keypress before continuation
       Translatable.Print("utils.key");
       Console.ReadKey();
     }
 
-    private void Draw()
+    private static void Draw()
     {
       Console.Clear();
     }

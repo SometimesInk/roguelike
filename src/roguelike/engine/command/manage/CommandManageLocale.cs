@@ -1,6 +1,8 @@
 using roguelike.roguelike.util.resources;
 using roguelike.roguelike.util.resources.translatable;
 
+// ReSharper disable ConvertIfStatementToSwitchStatement
+
 namespace roguelike.roguelike.engine.command.manage;
 
 public class CommandManageLocale : Command
@@ -16,29 +18,26 @@ public class CommandManageLocale : Command
     return "locale";
   }
 
-  public override CommandResult Execute(string[] args)
+  public override (Translatable, object[]?) Execute(string[] args)
   {
     // Check for arguments
-    // ReSharper disable once ConvertIfStatementToSwitchStatement
-    if (args.Length == 1) return new CommandResult(GetTranslatable("error.noArgs"));
-    if (args.Length > 2) return new CommandResult(GetTranslatable("error.toManyArgs"));
+    if (args.Length == 1) return (GetTranslatable("error.noArgs"), null);
+    if (args.Length > 2) return (GetTranslatable("error.toManyArgs"), null);
     string file = args[1];
-    if (!file.EndsWith(".lang")) return new CommandResult(GetTranslatable("error.notLangArg"));
+    if (!file.EndsWith(".lang")) return (GetTranslatable("error.notLangArg"), null);
 
     // Check if file exists
-    if (!File.Exists(Resources.GetResourcePath($"lang/{file}")))
-      return CommandResult.Format(GetTranslatable("error.notExist"), formattingElements: file);
+    if (!File.Exists(Resources.GetResourcePath(Path.Combine("lang", file))))
+      return (GetTranslatable("error.NotExist"), [file]);
 
     // Check if there is a change to be made
-    if (Translatable.ActiveLocale == file)
-      return CommandResult.Format(GetTranslatable("error.noChange"), formattingElements: file);
+    if (Translatable.GetActiveLocale() == file)
+      return (GetTranslatable("error.noChange"), [file]);
 
     // Change locale
-    // TODO: Set locale in [future] config system to be applied on next launch
-    string oldLocale = Translatable.ActiveLocale;
-    Translatable.ActiveLocale = file;
+    string oldLocale = Translatable.GetActiveLocale();
+    // Translatable.ActiveLocale = file; // Assign locale
 
-    return CommandResult.Format(GetTranslatable("output"), false, oldLocale,
-      file);
+    return (GetTranslatable("output"), [oldLocale, file]);
   }
 }

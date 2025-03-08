@@ -3,21 +3,22 @@
 
 // #define CHECKS
 
+using roguelike.roguelike.engine.command;
 using roguelike.roguelike.engine.command.manage;
 using roguelike.roguelike.util.resources.translatable;
 
-namespace roguelike.roguelike.engine.command
+namespace roguelike.roguelike.engine.handle
   // ReSharper disable once ArrangeNamespaceBody
 {
-  public class CommandParser
+  public static class HandlerCommand
   {
-    private readonly List<Command> registeredCommands = [];
+    private static readonly List<Command> RegisteredCommands = [];
 
-    public CommandParser()
+    public static void Init()
     {
       // Register commands
-      registeredCommands.Add(new CommandManageQuit());
-      registeredCommands.Add(new CommandManageLocale());
+      RegisteredCommands.Add(new CommandManageQuit());
+      RegisteredCommands.Add(new CommandManageLocale());
 
 #if CHECKS
       foreach (Command command in registeredCommands)
@@ -35,17 +36,14 @@ namespace roguelike.roguelike.engine.command
 #endif
     }
 
-    public CommandResult? ParseCommand(Window win, string[] args)
+    public static (Translatable, object[]?) ParseCommand(string[] args)
     {
       // Find registered command
       Command? command = FindCommand(args[0]);
-      if (command is null) return null;
+      if (command is null) return (Translatable.Empty, null);
 
       // Execute command
-      CommandResult output = command.Execute(args);
-
-      // Process command output
-      if (output.CloseWindow) win.SetWindowShouldClose(true);
+      var output = command.Execute(args);
 
       return output;
     }
@@ -56,14 +54,9 @@ namespace roguelike.roguelike.engine.command
     /// <param name="name">The name of the command to look for including its
     /// type</param>
     /// <returns>The command of null if it was not found</returns>
-    private Command? FindCommand(string name)
+    private static Command? FindCommand(string name)
     {
-      foreach (Command registeredCommand in registeredCommands)
-      {
-        if (registeredCommand.ToString() == name) return registeredCommand;
-      }
-
-      return null;
+      return RegisteredCommands.FirstOrDefault(registeredCommand => registeredCommand.ToString() == name);
     }
   }
 }

@@ -3,6 +3,7 @@ utils.key=(Press any key to continue)
 
 ; ; Translatable
 translatable.debug={0}
+translatable.init.checks=Found '{0}' translatables.
 translatable.error.missing=The translation for the key '{0}' is missing.
 translatable.error.definedEmpty=The empty translation key is defined, although it should not be.
 translatable.error.abnormalDebug=The debug translation key is not defined to its standard value of '{0}'.

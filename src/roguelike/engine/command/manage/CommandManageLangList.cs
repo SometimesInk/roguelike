@@ -3,7 +3,7 @@ using roguelike.roguelike.util.resources.translatable;
 
 namespace roguelike.roguelike.engine.command.manage;
 
-public class CommandManageListLocales : Command
+public class CommandManageLangList : Command
 {
   protected override CommandType GetCommandType()
   {
@@ -12,7 +12,7 @@ public class CommandManageListLocales : Command
 
   protected override string GetName()
   {
-    return "listLocales";
+    return "lang.list";
   }
 
   public override (Translatable, object[]?) Execute(string[] args)
@@ -23,7 +23,7 @@ public class CommandManageListLocales : Command
     int count = 0;
     foreach (string file in Directory.GetFiles(Resources.GetResourcePath("lang")))
     {
-      Translatable.Printf(GetTranslatable("output.found"), form: Path.GetFileName(file));
+      Translatable.Printf(GetTranslatable("output.found"), Path.GetFileName(file));
       count++;
     }
 

@@ -1,5 +1,12 @@
+// In this class, SAFE MODE does the following:
+//  - Makes the Read<T>(string) method return the default config on failure
+//    instead of throwing an error.
+
+// #define SAFE_MODE
+
 using Newtonsoft.Json;
 using roguelike.roguelike.util.resources;
+using roguelike.roguelike.util.resources.translatable;
 
 namespace roguelike.roguelike.config;
 
@@ -7,25 +14,61 @@ public abstract class Config
 {
   public abstract string GetName();
 
-  public static T Read<T>(string name)
+  /// <summary>
+  /// Deserialize the given file.
+  /// </summary>
+  /// <param name="name">Name of the config file.</param>
+  /// <typeparam name="T">Type to deserialize as.</typeparam>
+  /// <returns>The deserialized config object, or its default state if safe mode
+  ///  is on and an exception occurred.</returns>
+  /// <exception cref="ArgumentException">Type param is not a config type.
+  /// </exception>
+  /// <exception cref="FileNotFoundException">Config file does not exist.
+  /// </exception>
+  /// <exception cref="InvalidOperationException">Could not deserialize.
+  /// </exception>
+  public static T Read<T>(string name) where T : new()
   {
-    // TODO: check for contents' definition and safe mode for this
-    string contents = Resources.ReadPath("conf", name);
-    return JsonConvert.DeserializeObject<T>(contents) ?? throw new InvalidOperationException();
+    // Check if type param is of the correct instance.
+    if (typeof(T).BaseType != typeof(Config)) throw new ArgumentException("Type param does not extend Config.");
+
+    try
+    {
+      string contents = Resources.ReadPath("conf", name);
+      return JsonConvert.DeserializeObject<T>(contents) ?? throw new InvalidOperationException();
+    }
+    catch (FileNotFoundException)
+    {
+      Translatable.Printf("config.error.missingConfig", stream: TranslatablePrintStream.Err, form: name);
+
+#if SAFE_MODE
+      return new T();
+#else
+      throw;
+#endif
+    }
+    catch (InvalidOperationException)
+    {
+      Translatable.Printf("config.error.notDeserializable", stream: TranslatablePrintStream.Err, form: name);
+
+#if SAFE_MODE
+      return new T();
+#else
+      throw;
+#endif
+    }
   }
 
-  public void Write<T>()
+  public void Write()
   {
-    // TODO: Safe mode for this, and perhaps a way to easily convert from type
-    //  T1 to T2 as this piece of code is often repeated.
-    T conf = (T)Convert.ChangeType(this, typeof(T));
-
-    string contents = JsonConvert.SerializeObject(conf, typeof(T), Formatting.Indented, new JsonSerializerSettings());
-
-    // TODO: Safe mode here to check cast
-    File.WriteAllText(conf.ToString(), contents);
+    string contents = JsonConvert.SerializeObject(this, GetType(), Formatting.Indented, new JsonSerializerSettings());
+    File.WriteAllText(ToString(), contents);
   }
 
+  /// <summary>
+  /// Returns the path of the config file.
+  /// </summary>
+  /// <returns>Path to the config file.</returns>
   public override string ToString()
   {
     // Return path

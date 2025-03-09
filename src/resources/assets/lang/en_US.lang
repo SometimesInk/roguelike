@@ -1,6 +1,10 @@
 ; ; Utils
 utils.key={0}(Press any key to continue)
 
+; ; Config
+config.error.missingConfig=Config file for type '{0}' was not found.
+config.error.notDeserializable=Config file '{0}' could not be deserialized.
+
 ; ; Translatable
 translatable.debug={0}
 translatable.init.checks=Found '{0}' translatables.
@@ -10,30 +14,53 @@ translatable.error.abnormalDebug=The debug translation key is not defined to its
 
 ; ; Command Parsing
 command.parsing.invalid=Input '{0}' is not a recognized command.
-command.parsing.invite= >{0}
+command.parsing.invite={0}>{1}
 
 ; Locale Manage Command
-command.manage.locale.name=lang
-command.manage.locale.usage=Either prints the current lang., or changes it to the given locale.
-command.manage.locale.output=Successfully switched language locale from '{0}' to '{1}'.
-command.manage.locale.output.noArgs=The '{0}' language locale is currently selected.
-command.manage.locale.error.toManyArgs=This command should only have 1 argument.
-command.manage.locale.error.notLangArg=This command's only argument should end in '.lang'.
-command.manage.locale.error.notExist=The language locale '{0}' was not found in assets.
-command.manage.locale.error.noChange=The language locale '{0}' is already selected.
+command.manage.lang.name=lang
+command.manage.lang.usage=(<locale>) Either prints the current language locale, or changes it to the specified one.
+command.manage.lang.output=Successfully switched language locale from '{0}' to '{1}'.
+command.manage.lang.output.noArgs=The '{0}' language locale is currently selected.
+command.manage.lang.error.toManyArgs=This command should only have 1 argument.
+command.manage.lang.error.notLangArg=This command's only argument should end in '.lang'.
+command.manage.lang.error.notExist=The language locale '{0}' was not found in assets.
+command.manage.lang.error.noChange=The language locale '{0}' is already selected.
 
 ; List Locale Manage Command
-command.manage.listLocales.name=langList
-command.manage.listLocales.usage=Prints all locales in the lang/ directory.
-command.manage.listLocales.output=Successfully found '{0}' locale/s.
-command.manage.listLocales.output.found=Found '{0}',
-command.manage.listLocales.error.toManyArgs=This command should have no arguments.
+command.manage.lang.list.name=langList
+command.manage.lang.list.usage=Prints all available language locales.
+command.manage.lang.list.output=Successfully found {0} locale/s.
+command.manage.lang.list.output.found='{0}',
+command.manage.lang.list.error.toManyArgs=This command should have no arguments.
+
+; List Manage Command
+command.manage.list.name=list
+command.manage.list.usage=Lists all commands and their uses.
+command.manage.list.output=Successfully found {0} command/s.
+command.manage.list.error.toManyArgs=This command should have no arguments.
+
+; Net. Init Manage Command
+command.manage.net.init.name=networkInit
+command.manage.net.init.usage=Starts hosting a server.
+command.manage.net.init.output=Initialized network connection.
+
+; Net. Join Manage Command
+command.manage.net.join.name=networkJoin
+command.manage.net.join.usage=(address, port) Joins a network.
+command.manage.net.join.output=Initialized network connection.
+
+; Net. List Clients Manage Command
+command.manage.net.listClients.name=networkListClients
+command.manage.net.listClients.usage=Lists all current connected clients.
+command.manage.net.listClients.output=Successfully found {0} clients.
+command.manage.net.listClients.error.toManyArgs=This command should have no arguments.
+command.manage.net.listClients.error.notServer=You are not hosting a server.
 
 ; Quit Manage Command
 command.manage.quit.name=quit
-command.manage.quit.usage=no arguments.
+command.manage.quit.usage=Exits the program.
 command.manage.quit.output=Goodbye!
 
 ; Debug Manage Command
 command.manage.debug.name=debug
-command.manage.debug.usage=no arguments.
+command.manage.debug.usage=Used for debugging.

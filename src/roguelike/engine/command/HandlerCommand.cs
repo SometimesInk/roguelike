@@ -3,21 +3,24 @@
 
 // #define CHECKS
 
-using roguelike.roguelike.engine.command;
 using roguelike.roguelike.engine.command.manage;
 using roguelike.roguelike.util.resources.translatable;
 
-namespace roguelike.roguelike.engine.handle;
+namespace roguelike.roguelike.engine.command;
 
 public static class HandlerCommand
 {
-  private static readonly List<Command> RegisteredCommands = [];
+  public static readonly List<Command> RegisteredCommands = [];
 
   public static void Init()
   {
     // Register commands
-    RegisteredCommands.Add(new CommandManageListLocales());
-    RegisteredCommands.Add(new CommandManageLocale());
+    RegisteredCommands.Add(new CommandManageLangList());
+    RegisteredCommands.Add(new CommandManageLang());
+    RegisteredCommands.Add(new CommandManageList());
+    RegisteredCommands.Add(new CommandManageNetInit());
+    RegisteredCommands.Add(new CommandManageNetJoin());
+    RegisteredCommands.Add(new CommandManageNetListClients());
     RegisteredCommands.Add(new CommandManageQuit());
 
 #if CHECKS
@@ -56,6 +59,11 @@ public static class HandlerCommand
   /// <returns>The command of null if it was not found</returns>
   private static Command? FindCommand(string name)
   {
-    return RegisteredCommands.FirstOrDefault(registeredCommand => registeredCommand.ToString() == name);
+    foreach (Command registeredCommand in RegisteredCommands)
+    {
+      if (registeredCommand.ToString() == name) return registeredCommand;
+    }
+
+    return null;
   }
 }

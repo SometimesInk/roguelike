@@ -1,8 +1,13 @@
 namespace roguelike.roguelike.config;
 
-public class ConfigMain(string activeLocale = "en_US.lang") : Config
+public class ConfigMain : Config
 {
-  public string ActiveLocale { get; private set; } = activeLocale;
+  public ConfigMain()
+  {
+    ActiveLocale = "en_US.lang";
+  }
+
+  public string ActiveLocale { get; private set; }
 
   public override string GetName()
   {

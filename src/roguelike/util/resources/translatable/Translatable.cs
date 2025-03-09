@@ -25,7 +25,6 @@
 //  looks like some standard library stuff...
 
 using roguelike.roguelike.config;
-using roguelike.roguelike.engine.handle;
 
 namespace roguelike.roguelike.util.resources.translatable;
 
@@ -46,6 +45,10 @@ public class Translatable(string key)
 
     // Cache
     cachedLocale = GenerateCache(activeLocale);
+    if (cachedLocale == null)
+    {
+      throw new NullReferenceException();
+    }
 
 #if CHECKS
     // Check if cache was correctly generated based on the main locale en_US
@@ -97,18 +100,12 @@ public class Translatable(string key)
 
   private static string GetLangValue(Translatable translatable)
   {
-    try
-    {
-      return cachedLocale[translatable.Key];
-    }
-    catch (Exception)
-    {
+    if (cachedLocale.TryGetValue(translatable.Key.ToLower(), out string? value)) return value;
 #if SAFE_MODE
-      return translatable.Key;
+    return translatable.Key;
 #else
-      throw new KeyNotFoundException($"Could not find a translation key for '{translatable.Key}'.");
+    throw new KeyNotFoundException($"Could not find a translation key for '{translatable.Key}'.");
 #endif
-    }
   }
 
   public static void Print(Translatable translatable, bool endWithNewLine = true, TranslatablePrintStream stream =
@@ -175,16 +172,16 @@ public class Translatable(string key)
     // ReSharper disable once JoinDeclarationAndInitializer
     string formattedString;
 #if SAFE_MODE
-      try
-      {
+    try
+    {
 #endif
     formattedString = string.Format(ToString(), formatElements);
 #if SAFE_MODE
-      }
-      catch (Exception)
-      {
-        return ToString();
-      }
+    }
+    catch (Exception)
+    {
+      return ToString();
+    }
 #endif
 
     return formattedString;

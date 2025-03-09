@@ -1,4 +1,4 @@
-using roguelike.roguelike.engine.handle;
+using roguelike.roguelike.engine.command;
 using roguelike.roguelike.util.resources.translatable;
 
 namespace roguelike.roguelike.engine;
@@ -7,7 +7,7 @@ internal static class Input
 {
   public static void Ask()
   {
-    Translatable.Printf("command.parsing.invite", false, form: " ");
+    Translatable.Printf("command.parsing.invite", false, form: [' ', ' ']);
     string? line = Console.ReadLine();
 
     // Check if line is valid

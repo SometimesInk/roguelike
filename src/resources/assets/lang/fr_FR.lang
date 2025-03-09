@@ -13,21 +13,26 @@ command.parsing.invalid=Input '{0}' is not a recognized command.
 command.parsing.invite= >{0}
 
 ; Locale Manage Command
-command.manage.locale.name=lang
-command.manage.locale.usage=Either prints the current lang., or changes it to the given locale.
-command.manage.locale.output=Successfully switched language locale from '{0}' to '{1}'.
-command.manage.locale.output.noArgs=The '{0}' language locale is currently selected.
-command.manage.locale.error.toManyArgs=This command should only have 1 argument.
-command.manage.locale.error.notLangArg=This command's only argument should end in '.lang'.
-command.manage.locale.error.notExist=The language locale '{0}' was not found in assets.
-command.manage.locale.error.noChange=The language locale '{0}' is already selected.
+command.manage.lang.name=lang
+command.manage.lang.usage=Either prints the current lang., or changes it to the given locale.
+command.manage.lang.output=Successfully switched language locale from '{0}' to '{1}'.
+command.manage.lang.output.noArgs=The '{0}' language locale is currently selected.
+command.manage.lang.error.toManyArgs=This command should only have 1 argument.
+command.manage.lang.error.notLangArg=This command's only argument should end in '.lang'.
+command.manage.lang.error.notExist=The language locale '{0}' was not found in assets.
+command.manage.lang.error.noChange=The language locale '{0}' is already selected.
 
 ; List Locale Manage Command
-command.manage.listLocales.name=langList
-command.manage.listLocales.usage=Prints all locales in the lang/ directory.
-command.manage.listLocales.output=Successfully found '{0}' locale/s.
-command.manage.listLocales.output.found=Found '{0}',
-command.manage.listLocales.error.toManyArgs=This command should have no arguments.
+command.manage.langList.name=langList
+command.manage.langList.usage=Prints all locales in the lang/ directory.
+command.manage.langList.output=Successfully found '{0}' locale/s.
+command.manage.langList.output.found=Found '{0}',
+command.manage.langList.error.toManyArgs=This command should have no arguments.
+
+; Net Init Manage Command
+command.manage.net.init.name=netInit
+command.manage.quit.usage=no arguments.
+command.manage.quit.output=Initialized network connection.
 
 ; Quit Manage Command
 command.manage.quit.name=quit

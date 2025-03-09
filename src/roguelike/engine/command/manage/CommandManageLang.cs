@@ -1,5 +1,4 @@
 using roguelike.roguelike.config;
-using roguelike.roguelike.engine.handle;
 using roguelike.roguelike.util.resources;
 using roguelike.roguelike.util.resources.translatable;
 
@@ -7,7 +6,7 @@ using roguelike.roguelike.util.resources.translatable;
 
 namespace roguelike.roguelike.engine.command.manage;
 
-public class CommandManageLocale : Command
+public class CommandManageLang : Command
 {
 
   protected override CommandType GetCommandType()
@@ -17,7 +16,7 @@ public class CommandManageLocale : Command
 
   protected override string GetName()
   {
-    return "locale";
+    return "lang";
   }
 
   public override (Translatable, object[]?) Execute(string[] args)
@@ -38,7 +37,7 @@ public class CommandManageLocale : Command
       return (GetTranslatable("error.noChange"), [file]);
 
     // Change locale
-    HandlerConfig.GetConfig<ConfigMain>().SetActiveLocale(file).Write<ConfigMain>();
+    HandlerConfig.GetConfig<ConfigMain>().SetActiveLocale(file).Write();
 
     return (GetTranslatable("output"), [Translatable.GetActiveLocale(), file]);
   }

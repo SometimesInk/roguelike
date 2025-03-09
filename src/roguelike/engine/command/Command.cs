@@ -16,7 +16,7 @@ public abstract class Command
 
   public string GetUsage()
   {
-    return GetTranslatable().ToString() + GetTranslatable("usage");
+    return GetTranslatable() + " -> " + GetTranslatable("usage");
   }
 
   /// <summary>

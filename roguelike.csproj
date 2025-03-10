@@ -11,9 +11,6 @@
         <None Include = "src\resources\assets\**\*" CopyToOutputDirectory = "PreserveNewest"/>
     </ItemGroup>
     <ItemGroup>
-        <Folder Include = "src\roguelike\util\"/>
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include = "Newtonsoft.Json" Version = "13.0.3"/>
     </ItemGroup>
 </Project>

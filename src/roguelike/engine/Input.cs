@@ -1,33 +1,48 @@
-using roguelike.roguelike.engine.command;
-using roguelike.roguelike.util.resources.translatable;
+using roguelike.roguelike.engine.commands;
+using roguelike.roguelike.engine.rendering;
+using roguelike.roguelike.utils.resources.translatables;
 
 namespace roguelike.roguelike.engine;
 
 internal static class Input
 {
-  public static void Ask()
+  public static void Ask(EntryWindow win)
   {
-    Translatable.Printf("command.parsing.invite", false, form: [' ', ' ']);
-    string? line = Console.ReadLine();
+    win.WriteMessage(new Translatable("command.parsing.invite").Format(' ', ' '));
 
-    // Check if line is valid
-    if (string.IsNullOrWhiteSpace(line))
+    bool acquiringInput = true;
+    while (acquiringInput)
+    {
+      // Intercept key presses (such that there is no echo)
+      // TODO: Make this safe (since it intercepts CTRL-C)
+      ConsoleKeyInfo key = Console.ReadKey(true);
+
+      win.ModifyInput(key, s =>
+      {
+        ParseBuffer(win, s);
+        acquiringInput = false;
+      });
+    }
+  }
+
+  private static void ParseBuffer(EntryWindow win, string input)
+  {
+    // Check if buffer is whitespace
+    if (string.IsNullOrWhiteSpace(input))
     {
       Window.ShouldRedraw = false;
       return;
     }
 
     // Get command arguments where arg[0] is the command alias used
-    string[] args = line.Split(' ');
+    string[] args = input.Split(' ');
 
     // Send invalid translatable if the command wasn't recognized and parsed.
-    var output = HandlerCommand.ParseCommand(args);
-    if (output.Item1 == Translatable.Empty)
-      Translatable.Printf("command.parsing.invalid", args[0]);
-    else
-    {
-      if (output.Item2 == null) Translatable.Print(output.Item1);
-      else Translatable.Printf(output.Item1, output.Item2);
-    }
+    Translatable output = CommandHandler.ParseCommand(win, args);
+
+    // Format command output
+    win.WriteMessage(output == Translatable.Empty
+      ? new Translatable("command.parsing.invalid").Format(args[0])
+      : output);
   }
 }

@@ -2,6 +2,7 @@
 utils.key={0}(Press any key to continue)
 
 ; ; Config
+config.error=An error occurred while reading config file '{0}'.
 config.error.missingConfig=Config file for type '{0}' was not found.
 config.error.notDeserializable=Config file '{0}' could not be deserialized.
 
@@ -55,6 +56,13 @@ command.manage.net.listClients.usage=Lists all current connected clients.
 command.manage.net.listClients.output=Successfully found {0} clients.
 command.manage.net.listClients.error.toManyArgs=This command should have no arguments.
 command.manage.net.listClients.error.notServer=You are not hosting a server.
+
+; Net. Send Packet (to) Host Manage Command
+command.manage.net.sendPacketH.name=networkSendPacketH
+command.manage.net.sendPacketH.usage=(packetType, data) Sends a packet to the host.
+command.manage.net.sendPacketH.output=Successfully sent packet to host.
+command.manage.net.sendPacketH.error=An error occured.
+command.manage.net.sendPacketH.error.host=You are host, cannot send packet to yourself.
 
 ; Quit Manage Command
 command.manage.quit.name=quit

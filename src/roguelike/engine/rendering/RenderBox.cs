@@ -48,12 +48,11 @@ public class RenderBox
     theseCorners.Add(Corner((ushort)(Start.X + Width), Start.Y, '┐'));
     theseCorners.Add(Corner(Start.X, (ushort)(Start.Y + Height), '└'));
     theseCorners.Add(Corner((ushort)(Start.X + Width), (ushort)(Start.Y + Height), '┘'));
-    foreach ((char, Point) corner in theseCorners)
+    theseCorners.ForEach(c =>
     {
-      Console.SetCursorPosition(corner.Item2.X, corner.Item2.Y);
-      Console.Write(corner.Item1);
-    }
-
+      Console.SetCursorPosition(c.Item2.X, c.Item2.Y);
+      Console.Write(c.Item1);
+    });
     corners.AddRange(theseCorners);
 
     // First stroke down

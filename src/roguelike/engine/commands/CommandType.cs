@@ -9,6 +9,4 @@ public enum CommandType : ushort // 16-bit unsigned integer, thus a char.
   Common = '\uFFFD',
 
   Manage = '@',
-
-  Macro = ':'
 }

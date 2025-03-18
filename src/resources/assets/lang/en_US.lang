@@ -1,6 +1,10 @@
 ; ; Utils
 utils.key={0}(Press any key to continue)
 
+; ; Windows
+window.main.name=Main Terminal
+window.logs.name=Logs
+
 ; ; Config
 config.error=An error occurred while reading config file '{0}'.
 config.error.missingConfig=Config file for type '{0}' was not found.
@@ -15,7 +19,7 @@ translatable.error.abnormalDebug=The debug translation key is not defined to its
 
 ; ; Command Parsing
 command.parsing.invalid=Input '{0}' is not a recognized command.
-command.parsing.invite={0}>{1}
+command.parsing.invite= >{0}
 
 ; Locale Manage Command
 command.manage.lang.name=lang

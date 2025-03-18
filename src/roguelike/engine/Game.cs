@@ -4,60 +4,53 @@ using roguelike.roguelike.utils.resources.configuring;
 using roguelike.roguelike.utils.resources.locale;
 using roguelike.roguelike.utils.resources.translatables;
 
-namespace roguelike.roguelike.engine
+namespace roguelike.roguelike.engine;
+
+internal static class Game
 {
-  internal static class Game
+  public static void Run()
   {
-    private static EntryWindow logs = new EntryWindow("Logs", 0, (ushort)(Console.WindowHeight - 4),
-      (ushort)(Console.WindowWidth - 1), 3);
+    // Initialization
+    ConfigHandler.Init(Window.Logs);
+    LocaleHandler.Init(Window.Logs);
+    Window.Init();
+    CommandHandler.Init(Window.Logs);
 
-    private static EntryWindow mainWindow = new EntryWindow("Main Terminal", 0, 0,
-      (ushort)(Console.WindowWidth - 1), (ushort)(Console.WindowHeight - 4));
+    // Run game loop
+    Draw();
+    while (!Window.ShouldClose) Loop();
+    Quit();
+  }
 
-    public static void Run()
-    {
-      // Initialize essential components before others (pre-initialization)
-      ConfigHandler.Init(mainWindow);
-      LocaleHandler.Init(mainWindow);
-
-      // Initialize the rest
-      CommandHandler.Init(mainWindow);
-      Window.Init();
-
-      // Run game loop
+  private static void Loop()
+  {
+    // Draw window if it is required
+    if (Window.ShouldRedraw)
       Draw();
-      while (!Window.ShouldClose) Loop();
-    }
+    else
+      Window.ShouldRedraw = true;
 
-    private static void Loop()
-    {
-      // Draw window if it is required
-      if (Window.ShouldRedraw)
-        Draw();
-      else
-        Window.ShouldRedraw = true;
+    // Ask for command input
+    Input.Ask(Window.Focused);
+    if (Window.ShouldClose) return;
 
-      // Ask for command input
-      Input.Ask(mainWindow);
+    // If the window should be redrawn, ask for a keypress before doing so.
+    if (!Window.ShouldRedraw) return;
 
-      // If the window should be redrawn, ask for a keypress before doing so.
-      if (!Window.ShouldRedraw) return;
+    // Ask for a keypress before continuation
+    Window.Focused.WriteMessage(new Translatable("utils.key").Format("    "));
+    _ = Console.ReadKey(true);
+  }
 
-      // Ask for a keypress before continuation
-      mainWindow.WriteMessage(new Translatable("utils.key").Format("    "));
-      Console.ReadKey();
-    }
+  private static void Draw()
+  {
+    Window.ActiveWindows.ForEach(window => { window.Clear(false); });
+  }
 
-    private static void Draw()
-    {
-      // TODO: Change window clear to partial clear, perhaps using
-      //  a new RenderBox#Clear() which would fill its contents with spaces
-      Console.Clear();
-      mainWindow.Clear();
+  private static void Quit()
+  {
+    Console.Clear();
 
-      // Rendering
-      mainWindow.RenderBoundingBox();
-      logs.RenderBoundingBox();
-    }
+    // Save what there is to save
   }
 }

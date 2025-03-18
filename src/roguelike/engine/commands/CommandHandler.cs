@@ -13,7 +13,6 @@ public static class CommandHandler
 {
   public static readonly List<Command> RegisteredCommands = [];
 
-  // TODO: Handle macro creation
   /// <summary>
   /// Initializes commands.
   /// </summary>
@@ -48,7 +47,28 @@ public static class CommandHandler
 #endif
   }
 
-  public static Translatable ParseCommand(EntryWindow win, string[] args)
+  public static void ParseBuffer(EntryWindow win, string input)
+  {
+    // Check if buffer is whitespace
+    if (string.IsNullOrWhiteSpace(input))
+    {
+      Window.ShouldRedraw = false;
+      return;
+    }
+
+    // Get command arguments where arg[0] is the command alias used
+    string[] args = input.Split(' ');
+
+    // Send invalid translatable if the command wasn't recognized and parsed.
+    Translatable output = ParseCommand(win, args);
+
+    // Format command output
+    win.WriteMessage(output == Translatable.Empty
+      ? new Translatable("command.parsing.invalid").Format(args[0])
+      : output);
+  }
+
+  private static Translatable ParseCommand(EntryWindow win, string[] args)
   {
     // Find registered command
     Command? command = FindCommand(args[0]);
@@ -61,18 +81,14 @@ public static class CommandHandler
   }
 
   /// <summary>
-  /// Find a registered command with a specified name
+  /// Find a registered command with a specified name.
   /// </summary>
   /// <param name="name">The name of the command to look for including its
-  /// type</param>
-  /// <returns>The command of null if it was not found</returns>
+  ///  type marker.</param>
+  /// <returns>The command of null if it was not found.</returns>
   private static Command? FindCommand(string name)
   {
-    foreach (Command registeredCommand in RegisteredCommands)
-    {
-      if (registeredCommand.ToString() == name) return registeredCommand;
-    }
-
-    return null;
+    // Find the first command whose name matches the given one
+    return RegisteredCommands.FirstOrDefault(registeredCommand => registeredCommand.ToString() == name);
   }
 }

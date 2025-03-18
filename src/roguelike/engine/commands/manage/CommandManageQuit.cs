@@ -20,7 +20,6 @@ public class CommandManageQuit : Command
     // Close window
     Window.ShouldClose = true;
     Window.ShouldRedraw = false;
-    Console.Clear();
     return GetTranslatable("output");
   }
 }
